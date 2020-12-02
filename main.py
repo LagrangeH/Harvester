@@ -29,6 +29,7 @@ NOTHING = 2
 
 SPEED = 50
 ROTATE_SPEED = SPEED - 40
+MOTOR_ROTATE = 0.5 # TODO: change it
 
 road_map = []
 
@@ -67,12 +68,20 @@ def rotate_in_place(direction):
 
 
 def check_cell():
-    pass
+    try:
+        if infrared.proximity() > 50:    # change this
+            return False
+        else:
+            return True
+    except Exception:
+        return False
 
 
 def check_item():
-    # return color
-    pass
+    if color_center.reflected_light_intensity() > 50:   # change this
+        return SEED
+    else:
+        return TREE
 
 
 def turn_over():
@@ -110,11 +119,13 @@ def transfer_tree(step):
 
 
 def take_item():
-    pass
+    wheels.on_for_rotations(SpeedPercent(100), SpeedPercent(100), 0,5, brake=False)
+    motor.on_for_rotations(SpeedPercent(100), MOTOR_ROTATE)
 
 
 def release_item():
-    pass
+    motor.on_for_rotations(SpeedPercent(100), -MOTOR_ROTATE)
+    wheels.on_for_rotations(SpeedPercent(100), SpeedPercent(100), 0,5, brake=False)
 
 
 def run():
